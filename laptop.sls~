@@ -1,0 +1,45 @@
+mypkgs:
+  pkg.installed:
+    - pkgs:
+      - vim
+      - git
+      - virtualbox 
+      - vagrant
+      - terminator
+      - zsh
+      - python-pip
+      - libappindicator1
+
+install-oh-my-zsh:
+  cmd.run:
+    - name: sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+    - creates: /home/kaushik/.oh-my-zsh
+
+/home/kaushik/.zshrc:
+  file.managed:
+    - source: salt://zshrc
+
+extract-memsql:
+  archive.extracted:
+    - name: /home/kaushik/Downloads
+    - source: salt://memsql-ops-5.5.3.tar.gz
+    - archive_format: tar
+
+install-memsql:
+  cmd.run:
+    - name: /home/kaushik/Downloads/memsql-ops-5.5.3/install.sh
+
+shimla-git-clone:
+  git.latest:
+    - name: https://github.com/kaushik-infiswift/Shimla.git
+    - target: /home/kaushik/code/Shimla
+    - user: kaushik
+
+/tmp/slack-desktop-2.3.4-amd64.deb:
+  file.managed:
+    - source: salt://slack-desktop-2.3.4-amd64.deb
+
+slack-install:
+  cmd.run:
+    - name: dpkg -i /tmp/slack-desktop-2.3.4-amd64.deb
+      - git
